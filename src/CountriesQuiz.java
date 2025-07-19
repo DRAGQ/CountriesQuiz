@@ -36,7 +36,7 @@ public class CountriesQuiz {
     }
 
     private void capitalsQuiz() {
-        System.out.println("\n---| Select correct capital city. |---\n");
+        System.out.println("\n---| Select correct capital city. |---");
         for (int i = 0; i < (rounds / 2); i++) {
             Country choosedCountry = generateRandomCountry();
             System.out.println("\n--What is the capital city of " + choosedCountry.getName() + "?--\n");
@@ -64,7 +64,7 @@ public class CountriesQuiz {
             }
             createValidOptionsForPopulationQuiz(randomNumber, randomNumberForPopulation);
             printOptions(true);
-            System.out.println("Choose number or multiple numbers between 1 and " + choiceOptions.size());
+            System.out.println("Choose multiple numbers between 1 and " + choiceOptions.size());
             String answer = chooseAnswers(false);
             if (checkAnswerPopulationQuiz(randomNumberForPopulation, randomNumber, answer)) {
                 score++;
