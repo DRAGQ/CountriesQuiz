@@ -32,7 +32,7 @@ public class PopulationQuiz extends Quiz {
                 super.score++;
             }
         }
-        QuizUtils.conclusion(super.score, super.rounds);
+        conclusion(super.score, super.rounds);
     }
 
     @Override

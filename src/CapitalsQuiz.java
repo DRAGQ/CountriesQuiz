@@ -30,7 +30,7 @@ public class CapitalsQuiz extends Quiz{
             }
             super.choiceOptions.clear();
         }
-        QuizUtils.conclusion(super.score, super.rounds);
+        conclusion(super.score, super.rounds);
     }
 
     @Override
