@@ -44,7 +44,7 @@ public class Question {
     private void generateChoiceAnswersPopulationQuiz() {
         do {
             this.choiceOptions.clear();
-            QuizUtils.createAnswers(this.choiceOptions, this.countries, 5);
+            createAnswers();
             this.numberOfCorrectAnswers = 0;
             for (Country country : this.choiceOptions) {
                 if (this.randomNumber == 1 && country.getPopulation() > this.randomNumberOfPopulation) {
