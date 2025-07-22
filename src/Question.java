@@ -4,7 +4,6 @@ import java.util.List;
 
 public class Question {
     private final List<Country> countries;
-    private final int numberOfAnswers;
     private int numberOfCorrectAnswers;
     private int randomNumberOfPopulation;
     private int randomNumber;
@@ -12,9 +11,8 @@ public class Question {
     private final List<Country> choiceOptions;
 
 
-    Question(List<Country> countries, int numberOfAnswers) {
+    Question(List<Country> countries) {
         this.countries = countries;
-        this.numberOfAnswers = numberOfAnswers;
         this.usedCountries = new ArrayList<>();
         this.choiceOptions = new  ArrayList<>();
     }
@@ -23,7 +21,7 @@ public class Question {
         System.out.println("\n---| Select correct capital city. |---");
         Country choosedCountry = generateRandomCountry();
         System.out.println("\n--What is the capital city of " + choosedCountry.getName() + "?--\n");
-        createAnswers();
+        createAnswers(3);
         printAnswers(false);
         return choosedCountry;
     }
@@ -44,7 +42,7 @@ public class Question {
     private void generateChoiceAnswersPopulationQuiz() {
         do {
             this.choiceOptions.clear();
-            createAnswers();
+            createAnswers(5);
             this.numberOfCorrectAnswers = 0;
             for (Country country : this.choiceOptions) {
                 if (this.randomNumber == 1 && country.getPopulation() > this.randomNumberOfPopulation) {
@@ -85,8 +83,8 @@ public class Question {
         return false;
     }
 
-    public void createAnswers() {
-        for (int i = 0; i < this.numberOfAnswers; i++) {
+    public void createAnswers(int numberOfAnswers) {
+        for (int i = 0; i < numberOfAnswers; i++) {
             chooseRandomCountry();
         }
         Collections.shuffle(this.choiceOptions);

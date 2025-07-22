@@ -5,7 +5,6 @@ import java.util.Scanner;
 public class Quiz {
     private final Scanner scanner;
     private final List<Country> countries;
-    private final int numberOfAnswers;
     private final int rounds = 4;
     private final Question question;
     private final Answer answer;
@@ -13,8 +12,7 @@ public class Quiz {
     Quiz() {
         this.scanner = new Scanner(System.in);
         this.countries = new ArrayList<>(createCountries());
-        this.numberOfAnswers = 3;
-        this.question = new Question(this.countries, numberOfAnswers);
+        this.question = new Question(this.countries);
         this.answer = new Answer(this.question);
         startGame();
     }
