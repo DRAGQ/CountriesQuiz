@@ -86,7 +86,6 @@ public class PopulationQuiz extends Quiz {
                 continue;
             }
             return choice;
-
         }
     }
 

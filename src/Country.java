@@ -8,6 +8,7 @@ public class Country {
         this.capitalCity = capitalCity;
         this.population = population;
     }
+
     public String getName() {
         return this.name;
     }
