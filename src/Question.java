@@ -1,123 +1,86 @@
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
 
 public class Question {
-    private final List<Country> countries;
-    private int numberOfCorrectAnswers;
-    private int randomNumberOfPopulation;
-    private int randomNumber;
-    private final List<Country> usedCountries;
-    private final List<Country> choiceOptions;
+    private final String question;
+    private final boolean isSingleQuestion;
+    private final List<Answer> answers;
 
-
-    Question(List<Country> countries) {
-        this.countries = countries;
-        this.usedCountries = new ArrayList<>();
-        this.choiceOptions = new  ArrayList<>();
+    Question(String question, boolean isSingleQuestion) {
+        this.question = question;
+        this.isSingleQuestion = isSingleQuestion;
+        this.answers = new ArrayList<>();
     }
 
-    public Country findCorrectCapital() {
-        System.out.println("\n---| Select correct capital city. |---");
-        Country choosedCountry = generateRandomCountry();
-        System.out.println("\n--What is the capital city of " + choosedCountry.getName() + "?--\n");
-        createAnswers(3);
-        printAnswers(false);
-        return choosedCountry;
+    public void printQuestion(int questionIndex) {
+        System.out.println(questionIndex + ". What is " + this.question + "? " +
+                (this.isSingleQuestion ? "(Question with single answer)" : "(Question with multiple answers)"));
+
+        for (Answer answer : this.answers) {
+            System.out.print(answer.getIndex() + ". ");
+            answer.printAnswer();
+        }
     }
 
-    public void findCorrectPopulation() {
-        System.out.println("\n---| Select multiple countries with a larger or smaller population. |---");
-        this.randomNumber = (int) (Math.random() * 2);
-        this.randomNumberOfPopulation = (int) (Math.random() * (200 - 15) + 15);
-        System.out.println("\n--Select countries that have " +
-                (this.randomNumber == 1 ? "more" : "less") +
-                " inhabitants than " + this.randomNumberOfPopulation +
-                " milions--\n"
-        );
-        generateChoiceAnswersPopulationQuiz();
-        printAnswers(true);
+    public void createAnswers(char index, String answer, boolean isCorrect) {
+        this.answers.add(new Answer(index, answer, isCorrect));
     }
 
-    private void generateChoiceAnswersPopulationQuiz() {
-        do {
-            this.choiceOptions.clear();
-            createAnswers(5);
-            this.numberOfCorrectAnswers = 0;
-            for (Country country : this.choiceOptions) {
-                if (this.randomNumber == 1 && country.getPopulation() > this.randomNumberOfPopulation) {
-                    this.numberOfCorrectAnswers++;
-                } else if (this.randomNumber == 0 && country.getPopulation() < this.randomNumberOfPopulation) {
-                    this.numberOfCorrectAnswers++;
+    public boolean checkAnswer(Scanner scanner) {
+        while (true) {
+            String myAnswer = scanner.nextLine();
+
+            if (!checkValidIndex(myAnswer)) {
+                System.out.println("Choose correct indexes");
+                continue;
+            }
+            if (!checkRepetition(myAnswer)) {
+                System.out.println("Every index must be used just once");
+                continue;
+            }
+
+            for (Answer answer : this.answers) {
+                int counter = 0;
+                for (int i = 0; i < myAnswer.length(); i++) {
+                    if (answer.getIndex() == myAnswer.charAt(i) && !answer.isCorrect()) {
+                        return false;
+                    }
+                    if (answer.isCorrect() && answer.getIndex() != myAnswer.charAt(i)) {
+                        counter++;
+                    }
+                }
+                if (counter == myAnswer.length()) {
+                    return false;
                 }
             }
-        } while (this.numberOfCorrectAnswers <= 1);
-    }
-
-    private Country generateRandomCountry() {
-        while (true) {
-            chooseRandomCountry();
-            Country country = this.choiceOptions.get(this.choiceOptions.size() - 1);
-            if (!this.usedCountries.contains(country)) {
-                this.usedCountries.add(country);
-                return country;
-            }
-        }
-    }
-
-    private void chooseRandomCountry() {
-        while (true) {
-            int randomNumber = (int) (Math.random() * this.countries.size());
-            Country country = this.countries.get(randomNumber);
-            if (addRandomCountry(country)) {
-                break;
-            }
-        }
-    }
-
-    public boolean addRandomCountry(Country country) {
-        if (!this.choiceOptions.contains(country)) {
-            this.choiceOptions.add(country);
             return true;
         }
-        return false;
     }
 
-    public void createAnswers(int numberOfAnswers) {
-        for (int i = 0; i < numberOfAnswers; i++) {
-            chooseRandomCountry();
-        }
-        Collections.shuffle(this.choiceOptions);
-    }
-
-    private void printAnswers(boolean isCountry) {
-        for (int i = 0; i < this.choiceOptions.size(); i++) {
-            if (isCountry) {
-                System.out.println((i + 1) + ". " + this.choiceOptions.get(i).getName() + " ");
-            } else {
-                System.out.println((i + 1) + ". " + this.choiceOptions.get(i).getCapitalCity() + " ");
+    private boolean checkValidIndex(String myAnswer) {
+        for (int i = 0; i < myAnswer.length(); i++) {
+            int counter = 0;
+            for (Answer answer : this.answers) {
+                if (myAnswer.charAt(i) == answer.getIndex()) {
+                    counter++;
+                }
+            }
+            if (counter != 1) {
+                return false;
             }
         }
-        System.out.println();
+        return true;
     }
 
-    public List<Country> getChoiceOptions() {
-        return this.choiceOptions;
-    }
-
-    public int getNumberOfCorrectAnswers() {
-        return this.numberOfCorrectAnswers;
-    }
-
-    public int getRandomNumber() {
-        return this.randomNumber;
-    }
-
-    public int getRandomNumberOfPopulation() {
-        return this.randomNumberOfPopulation;
-    }
-
-    public void clearChoiceOptions() {
-        this.choiceOptions.clear();
+    private boolean checkRepetition(String myAnswer) {
+        for (int i = 0; i < myAnswer.length() - 1; i++) {
+            for (int j = 1 + i; j < myAnswer.length(); j++) {
+                if (myAnswer.charAt(i) == myAnswer.charAt(j)) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }

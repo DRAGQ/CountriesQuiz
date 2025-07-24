@@ -3,85 +3,57 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Quiz {
-    private final Scanner scanner;
-    private final List<Country> countries;
-    private final int rounds = 4;
-    private final Question question;
-    private final Answer answer;
+    private List<Question> questions;
+    private int score;
 
     Quiz() {
-        this.scanner = new Scanner(System.in);
-        this.countries = new ArrayList<>(createCountries());
-        this.question = new Question(this.countries);
-        this.answer = new Answer(this.question);
-        startGame();
-    }
-
-    private void startGame() {
+        this.questions = new ArrayList<>();
+        this.score = 0;
         introduction();
-        startCapitalQuiz();
-        startPopulationQuiz();
-        conclusion();
-        scanner.close();
+        createQuestions();
+        startQuiz();
+        printResult();
+
     }
 
     private void introduction() {
-        System.out.println("\n===--- Welcome to Capital Cities Quiz! ---===\n");
-        System.out.println("---This quiz is about choosing the right capitals and their population!---\n");
-        System.out.println("---If you want to start press enter.---");
-        scanner.nextLine();
+        System.out.println("\nWelcome to quiz Math Quiz.");
+        System.out.println("This quiz has 3 questions.\n");
     }
 
-    private void startCapitalQuiz() {
-        for (int i = 0; i < rounds / 2; i++) {
-            Country choosedCountry = this.question.findCorrectCapital();
-            this.answer.findAnswerCapitalQuiz(choosedCountry);
-            question.clearChoiceOptions();
+    private void createQuestions() {
+        Question question1 = new Question( "2 + 2", true);
+        question1.createAnswers('a', "5", false);
+        question1.createAnswers('b',"4", true);
+
+        Question question2 = new Question("2 + 5", true);
+        question2.createAnswers('a', "4", false);
+        question2.createAnswers('b', "7", true);
+
+        Question question3 = new Question("4 = ?", false);
+        question3.createAnswers('a', "2^2", true);
+        question3.createAnswers('b', "-2^2", true);
+        question3.createAnswers('c', "1 + 3", true);
+        question3.createAnswers('d', "4^1", true);
+
+        this.questions.add(question1);
+        this.questions.add(question2);
+        this.questions.add(question3);
+    }
+
+    private void startQuiz() {
+        Scanner scanner = new Scanner(System.in);
+        for (int i = 0; i < this.questions.size(); i++) {
+            this.questions.get(i).printQuestion(i+1);
+                System.out.println("Choose correct answer.");
+                if(this.questions.get(i).checkAnswer(scanner)) {
+                    this.score++;
+                }
         }
+        scanner.close();
     }
 
-    private void startPopulationQuiz() {
-        for (int i = 0; i < rounds / 2; i++) {
-            question.findCorrectPopulation();
-            answer.findAnswerPopulationQuiz();
-        }
-    }
-
-    private void conclusion() {
-        System.out.println("\n===---The score is " + answer.getScore() + "/" + rounds + "---===\n");
-        if (answer.getScore() < 2) {
-            System.out.println("You should review your geography a bit.");
-        } else if (answer.getScore() < rounds) {
-            System.out.println("Your knowledge isn't bad, but you could use some geography practice..");
-        } else {
-            System.out.println("Congratulations, you got full points!");
-        }
-    }
-
-
-    private List<Country> createCountries() {
-        List<Country> countries = new ArrayList<>();
-        countries.add(new Country("Australia", "Canberra", 26.66));
-        countries.add(new Country("Brazil", "Brasilia", 211.1));
-        countries.add(new Country("China", "Beijing", 1415.94));
-        countries.add(new Country("Czech Republic", "Prague", 10.60));
-        countries.add(new Country("France", "Paris", 66.66));
-        countries.add(new Country("Germany", "Berlin", 84.05));
-        countries.add(new Country("Italy", "Rome", 59.14));
-        countries.add(new Country("Japan", "Tokyo", 123.07));
-        countries.add(new Country("Panama", "Panama City", 4.46));
-        countries.add(new Country("Poland", "Warsaw", 38.12));
-        countries.add(new Country("Portugal", "Lisbon", 10.41));
-        countries.add(new Country("Romania", "Bucharest", 18.90));
-        countries.add(new Country("Russia", "Moscow", 143.96));
-        countries.add(new Country("San Marino", "San Marino", 0.03));
-        countries.add(new Country("Saudi Arabia", "Riyadh", 34.6));
-        countries.add(new Country("Serbia", "Belgrade", 6.69));
-        countries.add(new Country("Slovakia", "Bratislava", 5.47));
-        countries.add(new Country("Slovenia", "Ljubljana", 2.11));
-        countries.add(new Country("Spain", "Madrid", 47.89));
-        countries.add(new Country("Ukraine", "Kyiv", 39.03));
-        countries.add(new Country("United States", "Washington", 387.63));
-        return countries;
+    private void printResult() {
+        System.out.println("You had " + this.score + "/" +  this.questions.size() + " answers correct");
     }
 }
