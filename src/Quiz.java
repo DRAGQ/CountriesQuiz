@@ -54,6 +54,7 @@ public class Quiz {
     }
 
     private void printResult() {
-        System.out.println("You had " + this.score + "/" +  this.questions.size() + " answers correct");
+        System.out.println("*****Your total score is " + this.score + "/" +  this.questions.size() + ".*****\n");
+        System.out.println("---Thank you for using Math Quiz.---");
     }
 }

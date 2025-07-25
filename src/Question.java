@@ -6,11 +6,15 @@ public class Question {
     private final String question;
     private final boolean isSingleQuestion;
     private final List<Answer> answers;
+    private final List<String> correctAnswers;
+    private final List<String> incorrectAnswers;
 
     Question(String question, boolean isSingleQuestion) {
         this.question = question;
         this.isSingleQuestion = isSingleQuestion;
         this.answers = new ArrayList<>();
+        this.correctAnswers = new ArrayList<>();
+        this.incorrectAnswers = new ArrayList<>();
     }
 
     public void printQuestion(int questionIndex) {
@@ -29,6 +33,7 @@ public class Question {
 
     public boolean checkAnswer(Scanner scanner) {
         while (true) {
+            boolean isCorrect = true;
             String myAnswer = scanner.nextLine();
 
             if (!checkValidIndex(myAnswer)) {
@@ -44,17 +49,22 @@ public class Question {
                 int counter = 0;
                 for (int i = 0; i < myAnswer.length(); i++) {
                     if (answer.getIndex() == myAnswer.charAt(i) && !answer.isCorrect()) {
-                        return false;
+                        this.incorrectAnswers.add(answer.getAnswer());
+                        isCorrect =  false;
                     }
-                    if (answer.isCorrect() && answer.getIndex() != myAnswer.charAt(i)) {
+                    else if (answer.isCorrect() && answer.getIndex() != myAnswer.charAt(i)) {
                         counter++;
                     }
+                    else if (answer.isCorrect() && answer.getIndex() == myAnswer.charAt(i)) {
+                        this.correctAnswers.add(answer.getAnswer());
+                    }
                 }
-                if (counter == myAnswer.length()) {
-                    return false;
+                if (counter == myAnswer.length() && !isSingleQuestion) {
+                    isCorrect = false;
                 }
             }
-            return true;
+            runningResult();
+            return isCorrect;
         }
     }
 
@@ -82,5 +92,16 @@ public class Question {
             }
         }
         return true;
+    }
+
+    private void runningResult() {
+        int numberOfCorrectAnswers = 0;
+        for (Answer answer : this.answers) {
+            if (answer.isCorrect()) {numberOfCorrectAnswers++;}
+        }
+        System.out.println("Your correct answers: " + this.correctAnswers);
+        System.out.println("Your incorrect answers: " + this.incorrectAnswers);
+        System.out.println("Your score in this part is: " +  this.correctAnswers.size() + "/" + numberOfCorrectAnswers);
+        System.out.println("_____________________________________________________\n");
     }
 }

@@ -13,6 +13,10 @@ public class Answer {
         return this.index;
     }
 
+    public String getAnswer() {
+        return this.answer;
+    }
+
     public boolean isCorrect() {
         return this.isCorrect;
     }
